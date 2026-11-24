@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Budget Buddy</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-view="home">
+
+  <header class="site-header">
+    <div class="wrap bar">
+      <a class="brand" href="#home">
+        <span class="coin" id="coinSymbol" aria-hidden="true">&#8369;</span>
+        <span>Budget Buddy</span>
+      </a>
+      <nav aria-label="Main">
+        <a href="#home" data-nav="home">Home</a>
+        <a href="#log" data-nav="log">My log</a>
+      </nav>
+      <button type="button" class="btn small ghost-light" id="themeBtn" aria-label="Change theme">Theme: Auto</button>
+    </div>
+  </header>
+
+  <!-- ===== HOME VIEW ===== -->
+  <div id="homeView">
+    <span id="home"></span>
+    <section class="hero">
+      <div class="wrap hero-grid">
+
+        <div class="pitch">
+          <h1>Know where your money goes.</h1>
+          <p>Log what you gain and spend each day. Budget Buddy adds it up for you and gives simple tips on how to spend wisely.</p>
+          <a class="btn start" href="#log">Start</a>
+          <p class="reminder-home" id="homeReminder" hidden>You have not logged anything today. <a href="#log">Add today's entry</a></p>
+          <ul class="checks">
+            <li>A log for every day of the month</li>
+            <li>Totals and balance that update by themselves</li>
+            <li>Tips that match how your money is doing</li>
+          </ul>
+        </div>
+
+        <div class="preview card" aria-label="Example of your daily log">
+          <span class="tag">Example</span>
+          <h2>Your month at a glance</h2>
+          <div class="mini">
+            <div class="mini-stat in"><span>Gained</span><strong data-money="1500">1500</strong></div>
+            <div class="mini-stat out"><span>Spent</span><strong data-money="920">920</strong></div>
+            <div class="mini-stat left"><span>Left</span><strong data-money="580">580</strong></div>
+          </div>
+          <div class="progress" aria-hidden="true"><div class="ex-fill"></div></div>
+          <p class="muted">31% of the budget used. You can spend about <span data-money="85">85</span> a day for the rest of the month.</p>
+        </div>
+      </div>
+    </section>
+
+    <main class="wrap">
+      <section id="features" aria-labelledby="f-h">
+        <h2 class="section-title" id="f-h">Everything you need to manage your money</h2>
+        <div class="features">
+          <article class="feature">
+            <span class="icon" aria-hidden="true">&#128210;</span>
+            <h3>Daily log</h3>
+            <p>Write the money you gained and spent each day, with categories and notes.</p>
+          </article>
+          <article class="feature">
+            <span class="icon" aria-hidden="true">&#128202;</span>
+            <h3>Automatic totals</h3>
+            <p>Your running balance, weekly totals, and monthly totals add up as you type.</p>
+          </article>
+          <article class="feature">
+            <span class="icon" aria-hidden="true">&#128161;</span>
+            <h3>Smart tips</h3>
+            <p>Get spending suggestions based on your budget and how far into the month you are.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="how" aria-labelledby="h-h">
+        <h2 class="section-title" id="h-h">How it works</h2>
+        <ol class="steps">
+          <li><strong>Press Start.</strong> No sign up or login needed.</li>
+          <li><strong>Set your limit.</strong> Choose how much you want to spend this month.</li>
+          <li><strong>Log each day.</strong> Add what you gained and spent, and read your tips.</li>
+        </ol>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===== LOG VIEW ===== -->
+  <div id="logView">
+    <main class="wrap app">
+
+      <div class="page-head">
+        <h1 class="page-title">My daily log</h1>
+        <span class="pill" id="noSpendBadge" hidden>0 no-spend days</span>
+      </div>
+
+      <div class="reminder" id="reminder" role="status" hidden>
+        <span id="reminderText">You have not logged anything today.</span>
+        <button type="button" class="btn small" id="goToday">Go to today</button>
+      </div>
+
+      <!-- Quick Add for Today -->
+      <section class="card" id="quickAddCard" aria-labelledby="qa-h">
+        <div class="card-head">
+          <h2 id="qa-h">Quick add for today</h2>
+          <span class="muted" id="qa-date"></span>
+        </div>
+        <form id="qaForm" class="quick-add">
+          <div>
+            <label for="qa-type">Type</label>
+            <select id="qa-type">
+              <option value="out">Spent</option>
+              <option value="in">Gained</option>
+            </select>
+          </div>
+          <div>
+            <label for="qa-amount">Amount</label>
+            <input type="number" id="qa-amount" min="0.01" step="any" placeholder="0" required>
+          </div>
+          <div>
+            <label for="qa-cat">Category</label>
+            <select id="qa-cat"></select>
+          </div>
+          <div>
+            <label for="qa-note">Note</label>
+            <input type="text" id="qa-note" maxlength="60" placeholder="e.g. Lunch or fare">
+          </div>
+          <button type="submit" class="btn small">+ Add</button>
+        </form>
+      </section>
+
+      <section class="card" aria-labelledby="setup-h">
+        <h2 id="setup-h">My month</h2>
+        <div class="setup">
+          <div><label for="month">Month</label><input type="month" id="month"></div>
+          <div><label for="start">Money I started with</label><input type="number" id="start" min="0" step="any" placeholder="0"></div>
+          <div><label for="limit">Spending limit</label><input type="number" id="limit" min="0" step="any" placeholder="e.g. 3000"></div>
+          <div><label for="daily">Daily allowance</label><output id="daily" class="out-box">Set a limit</output></div>
+        </div>
+        <div class="setup-extra">
+          <button type="button" class="btn small ghost-inline" id="carryOverBtn">Use last month's remaining money</button>
+          <span class="muted" id="compareMsg"></span>
+        </div>
+      </section>
+
+      <section class="stats" aria-label="Summary">
+        <div class="stat in"><span>Gained</span><strong id="st-g">0</strong></div>
+        <div class="stat out"><span>Spent</span><strong id="st-s">0</strong></div>
+        <div class="stat left"><span>Money left</span><strong id="st-left">0</strong></div>
+        <div class="stat budget"><span>Budget left</span><strong id="st-budget">-</strong></div>
+      </section>
+
+      <section class="card" aria-labelledby="bar-h">
+        <h2 id="bar-h">Budget used</h2>
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
+          <div id="barFill"></div>
+        </div>
+        <p class="muted" id="barMsg">Set a spending limit to track your budget.</p>
+      </section>
+
+      <section class="card" aria-labelledby="tips-h">
+        <h2 id="tips-h">Suggestions for you</h2>
+        <ul class="insights" id="insights"></ul>
+        <p class="muted pick">How does your money feel? Tap to see tips.</p>
+        <div class="mood-tabs" id="moodTabs" role="group" aria-label="Choose tips"></div>
+        <div class="mood-panel" id="moodPanel" aria-live="polite">
+          <h3 id="moodTitle"></h3>
+          <ul id="moodTips"></ul>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="cat-h">
+        <h2 id="cat-h">Where your money went</h2>
+        <div class="donut-wrap">
+          <div class="donut" id="donut" role="img" aria-label="Chart of spending by category">
+            <div class="hole"><small>Spent</small><strong id="donutTotal">0</strong></div>
+          </div>
+          <ul class="legend" id="legend"></ul>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="log-h">
+        <div class="card-head">
+          <h2 id="log-h">Daily log</h2>
+          <span class="muted">Click "+ Items" on any day to add multiple entries</span>
+        </div>
+        <div class="log-toolbar">
+          <input type="search" id="logSearch" placeholder="Search notes..." aria-label="Search notes">
+          <select id="logCatFilter" aria-label="Filter by category">
+            <option value="">All categories</option>
+          </select>
+          <label class="check inline"><input type="checkbox" id="hideEmpty"> Hide empty days</label>
+        </div>
+        <table class="log">
+          <thead>
+            <tr><th>Day</th><th>Gained</th><th>Spent</th><th>Category</th><th>Note</th><th>Balance</th></tr>
+          </thead>
+          <tbody id="logBody"></tbody>
+        </table>
+      </section>
+
+      <section class="card" aria-labelledby="chart-h">
+        <h2 id="chart-h">Spending each day</h2>
+        <div class="chart" id="chart" role="img" aria-label="Bar chart of money spent each day"></div>
+        <p class="muted">Orange bars went over your daily allowance. Hover or tap a bar to see the amount.</p>
+      </section>
+
+      <section class="card" aria-labelledby="rec-h">
+        <div class="card-head">
+          <h2 id="rec-h">Recurring income &amp; bills</h2>
+          <button type="button" class="btn small ghost-inline" id="applyRec">Apply to this month</button>
+        </div>
+        <form id="recForm" class="rec-form">
+          <div><label for="rec-name">Name</label><input type="text" id="rec-name" maxlength="40" placeholder="e.g. Internet or Salary" required></div>
+          <div>
+            <label for="rec-type">Type</label>
+            <select id="rec-type">
+              <option value="out">Bill / Expense</option>
+              <option value="in">Income</option>
+            </select>
+          </div>
+          <div><label for="rec-amount">Amount</label><input type="number" id="rec-amount" min="1" step="any" placeholder="0" required></div>
+          <div><label for="rec-cat">Category</label><select id="rec-cat"></select></div>
+          <div><label for="rec-day">Day (1-31)</label><input type="number" id="rec-day" min="1" max="31" value="1" required></div>
+          <button type="submit" class="btn small">Save</button>
+        </form>
+        <div class="rec-list" id="recList"></div>
+      </section>
+
+      <section class="card" aria-labelledby="goal-h">
+        <h2 id="goal-h">Savings goals</h2>
+        <form id="goalForm" class="goal-form">
+          <div><label for="g-name">Goal</label><input type="text" id="g-name" maxlength="40" placeholder="e.g. New laptop" required></div>
+          <div><label for="g-target">Target amount</label><input type="number" id="g-target" min="1" step="any" placeholder="e.g. 20000" required></div>
+          <div><label for="g-date">Target date (optional)</label><input type="date" id="g-date"></div>
+          <button type="submit" class="btn small">Add goal</button>
+        </form>
+        <div class="goals" id="goals"></div>
+      </section>
+
+      <section class="card" aria-labelledby="set-h">
+        <h2 id="set-h">Settings &amp; backup</h2>
+        <div class="settings-grid">
+          <div>
+            <label for="currency">Currency</label>
+            <select id="currency"></select>
+          </div>
+          <div>
+            <label for="themeSelect">Theme</label>
+            <select id="themeSelect">
+              <option value="auto">Match my device</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <label class="check"><input type="checkbox" id="remindCheck"> Remind me when I have not logged today</label>
+        </div>
+
+        <div class="cat-manager">
+          <h3>Custom categories</h3>
+          <form id="catForm" class="cat-form">
+            <input type="text" id="newCat" maxlength="24" placeholder="Add a category (e.g. Pets)" aria-label="New category name">
+            <button type="submit" class="btn small">Add</button>
+          </form>
+          <div class="cat-chips" id="catChips"></div>
+        </div>
+
+        <div class="backup-row">
+          <button type="button" class="btn small ghost-inline" id="backupJson">Export full backup (.json)</button>
+          <label class="btn small ghost-inline file-btn">
+            Restore backup (.json)
+            <input type="file" id="restoreJson" accept="application/json,.json" hidden>
+          </label>
+        </div>
+      </section>
+
+      <div class="undo-bar" id="undoBar" role="status" hidden>
+        <span>This month was cleared.</span>
+        <button type="button" class="btn small" id="undoClear">Undo</button>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn small" id="export">Download CSV</button>
+        <button type="button" class="btn small danger" id="clear">Clear this month</button>
+        <span class="muted" id="saveMsg" role="status"></span>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Day multi-entry modal -->
+  <dialog id="dayModal" class="modal" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2 id="modalTitle">Entries for day</h2>
+        <button type="button" class="btn small ghost-inline" id="closeModal">Close</button>
+      </div>
+      <form id="modalForm" class="modal-form">
+        <select id="m-type" aria-label="Entry type">
+          <option value="out">Spent</option>
+          <option value="in">Gained</option>
+        </select>
+        <input type="number" id="m-amount" min="0.01" step="any" placeholder="Amount" required aria-label="Amount">
+        <select id="m-cat" aria-label="Category"></select>
+        <input type="text" id="m-note" maxlength="60" placeholder="Note" aria-label="Note">
+        <button type="submit" class="btn small">Add</button>
+      </form>
+      <ul id="modalList" class="modal-list"></ul>
+    </div>
+  </dialog>
+
+  <footer class="site-footer">
+    <p>Budget Buddy. Your data is saved in this browser only.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
